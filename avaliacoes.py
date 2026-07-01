@@ -58,4 +58,3 @@ def listar_avaliacoes(pacientes, avaliacoes):
     FREQUÊNCIA: {e["frequencia"]}
     OBSERVAÇÃO: {e["observacao"]}
 """)
-    
