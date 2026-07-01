@@ -1,6 +1,6 @@
-from pacientes import cadastrar_pacientes, listar_pacientes, atualizar_paciente, remover_paciente, buscar_pacientes
+from pacientes import cadastrar_pacientes, listar_pacientes, atualizar_paciente, remover_paciente, buscar_pacientes, ordenar_pacientes, estatisticas
 from avaliacoes import cadastrar_avaliacao, listar_avaliacoes
-
+from imc import mapear_imcs, filtrar_imcs
 pacientes = []
 avaliacoes = []
 
@@ -40,6 +40,15 @@ VIDAFIT - AVALIACAO DE SAUDE
         listar_avaliacoes(pacientes, avaliacoes)
     elif opcao == 7:
         buscar_pacientes(pacientes)
+    elif opcao == 8:
+        ordenar_pacientes(pacientes)
+    elif opcao == 9:
+        mapear_imcs(pacientes)
+    elif opcao == 10:
+        filtrar_imcs(pacientes)
+    elif opcao == 11:
+        estatisticas(pacientes)
+        
     
         
 
