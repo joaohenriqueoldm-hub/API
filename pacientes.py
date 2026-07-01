@@ -1,3 +1,4 @@
+from imc import calcular_imc, classificar_imc
 def id_paciente(pacientes):
 
     if len(pacientes) == 0:
@@ -21,6 +22,8 @@ def cadastrar_pacientes(pacientes):
     sexo = input("Sexo (M) ou (F): ")
     peso = float(input("Peso: "))
     altura = float(input("Altura: "))
+    imc = calcular_imc(peso, altura)
+    class_imc = classificar_imc(imc)
 
     paciente = {
         "id" : id,
@@ -28,7 +31,9 @@ def cadastrar_pacientes(pacientes):
         "idade" : idade,
         "sexo" : sexo,
         "peso" : peso,
-        "altura" : altura
+        "altura" : altura,
+        "imc" : imc,
+        "class_imc" : class_imc
     }
 
     pacientes.append(paciente)
@@ -40,12 +45,12 @@ def listar_pacientes(pacientes):
     
     for paciente in pacientes:
         print(f"""
-    ID: {paciente["id"]}
-    NOME: {paciente["nome"]}
-    IDADE: {paciente["idade"]}
-    SEXO: {paciente["sexo"]}
-    PESO: {paciente["peso"]}
-    ALTURA: {paciente["altura"]}
+    ID:            {paciente["id"]}
+    NOME:          {paciente["nome"]}
+    IDADE:         {paciente["idade"]}
+    SEXO:          {paciente["sexo"]}
+    PESO:          {paciente["peso"]}
+    ALTURA:        {paciente["altura"]}
 """)
         
 
@@ -75,6 +80,8 @@ def atualizar_paciente(pacientes):
             sexo = input(f'SEXO ({p["sexo"]}): ')
             peso = float(input(f'PESO ({p["peso"]}): '))
             altura = float(input(f'ALTURA ({p["altura"]}): '))
+            imc = calcular_imc(peso, altura)
+            class_imc = classificar_imc(imc)
 
             if nome != "":
                 p["nome"] = nome
@@ -86,6 +93,9 @@ def atualizar_paciente(pacientes):
                 p["peso"] = peso
             if altura != None:
                 p["altura"] = altura
+            if peso != None and altura != None:
+                p["imc"] = imc
+                p["class_imc"] = class_imc
 
             print("Cadastro do Paciente Atualizado com Sucesso")
         
@@ -113,3 +123,75 @@ def buscar_pacientes(pacientes):
         if termo.lower() in p["nome"].lower():
             encontrados.append(p)
     listar_pacientes(encontrados)
+
+
+def ordenar_pacientes(pacientes):
+
+    print("1 - IDADE")
+    print("2 - PESO")
+    print("3 - IMC")
+
+    opcao = input("Escolha: ")
+
+    ordem = input("ASC ou DESC: ").upper()
+
+    if ordem == "DESC":
+        reverse = True
+    else:
+        reverse = False
+
+    if opcao == "1":
+        lista = sorted(pacientes,
+                       key=lambda x: x["idade"],
+                       reverse=reverse)
+
+    elif opcao == "2":
+        lista = sorted(pacientes,
+                       key=lambda x: x["peso"],
+                       reverse=reverse)
+
+    elif opcao == "3":
+        lista = sorted(pacientes,
+                       key=lambda x: x["imc"],
+                       reverse=reverse)
+
+    else:
+        print("Opção inválida.")
+        return
+
+    listar_pacientes(lista)
+
+
+def calcular_imc_medio(pacientes):
+    soma = 0
+
+    for p in pacientes:
+        imc = p["imc"]
+        soma += imc
+
+    media = soma / len(pacientes)
+
+    return media
+
+
+def contar_por_faixa_imc(pacientes):
+    contador = 0 
+
+    for p in pacientes:
+        if p["class_imc"] == "SOBREPESO" or p["class_imc"] == "OBESIDADE":
+            contador += 1
+
+    return contador
+
+
+def estatisticas(pacientes):
+    imc_medio = calcular_imc_medio(pacientes)
+    pacientes_s_o = contar_por_faixa_imc(pacientes)
+
+    print(f"""
+   --- ESTATISTICAS GERAIS (REDUCE) ---
+Total de pacientes cadastrados: {len(pacientes)}
+IMC medio da base..............: {imc_medio:.2f}
+Pacientes com sobrepeso/obesidade: {pacientes_s_o}
+------------------------------------------------
+""")
